@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HandTime - Ecommerce</title>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <h1>HandTime</h1>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search products...">
+      <button onclick="searchProducts()">Search</button>
+    </div>
+    <nav class="main-nav">
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+      <ul>
+        <li><a onclick="showSection('home')">Home</a></li>
+        <li><a onclick="showSection('products')">Products</a></li>
+        <li><a onclick="showSection('cart')">Cart</a></li>
+        <li><a onclick="showSection('wishlist')">Wishlist</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+    </nav>
+    <div class="user-account">
+      <span id="userGreeting">Sign In</span>
+      <div class="dropdown">
+        <a href="#" id="userDropdownToggle" onclick="toggleDropdown()">▼</a>
+        <div class="dropdown-content" id="userDropdown">
+          <a href="#" onclick="showSignInDialog()" id="signInLink">Sign In</a>
+          <a href="#" onclick="showSection('history')" id="ordersLink" style="display: none;">Orders</a>
+          <a href="#" onclick="logout()" id="logoutLink" style="display: none;">Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Main Content -->
+  <main>
+    <!-- Home Section -->
+   <!-- <div id="home" class="section active">
+      <section class="hero">
+        <div class="hero-content">
+          <h2>Welcome to HandTime!</h2>
+          <p>Please register, login, or continue as a guest to start shopping.</p>
+          <p class="special-offer">Special Offer: Get 20% off on your first purchase! Use code: <strong>FIRST20</strong></p>
+        </div>
+      </section>
+      <section class="product-carousel">
+        <h3>Featured Products</h3>
+        <button class="carousel-btn prev" onclick="scrollCarousel('prev')">❮</button>
+        <div class="carousel-container" id="featuredProducts"></div>
+        <button class="carousel-btn next" onclick="scrollCarousel('next')">❯</button>
+        <a href="#products" class="shop-now">Shop Now</a>
+      </section>
+    </div> -->
+
+    <div id="home" class="section active">
+      <section class="hero">
+        <div class="hero-content">
+          <h2>Welcome to HandTime!</h2>
+          <p>Discover the best in electronics, fashion, furniture, cosmetics, and more.</p>
+          <p class="special-offer">Special Offer: Get 20% off on your first purchase! Use code: <strong>FIRST20</strong></p>
+        </div>
+      </section>
+      <section class="product-carousels">
+        <h3>Featured Products</h3>
+        <div id="categoryCarousels">
+          <!-- Dynamically generate carousels for each category -->
+        </div>
+       
+      </section>
+    </div>
+
+    <!-- Register Section -->
+    <div id="register" class="section">
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input type="text" id="regName" placeholder="Name" required>
+        <input type="number" id="regAge" placeholder="Age" required>
+        <select id="regGender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+          <option value="prefer not to say">Prefer not to say</option>
+        </select>
+        <input type="tel" id="regPhone" placeholder="Phone" required>
+        <input type="date" id="regDob" required>
+        <input type="email" id="regEmail" placeholder="Email" required>
+        <input type="password" id="regPassword" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+      <div id="regMessage"></div>
+    </div>
+
+    <!-- Login Section -->
+    <div id="login" class="section">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <a href="#" onclick="showSection('forgotPassword')">Forgot Password?</a>
+        <button type="submit">Login</button>
+      </form>
+      <div id="loginMessage"></div>
+    </div>
+
+    <!-- Forgot Password Section -->
+    <div id="forgotPassword" class="section">
+      <h2>Forgot Password</h2>
+      <form id="forgotPasswordForm">
+        <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+        <button type="submit">Reset Password</button>
+      </form>
+      <div id="forgotMessage"></div>
+    </div>
+
+    <!-- Products Section -->
+    <div id="products" class="section">
+      <h2>Products</h2>
+      <div class="filters">
+        <select id="categoryFilter">
+          <option value="all">All Categories</option>
+          <option value="electronics">Electronics</option>
+          <option value="fashion">Fashion</option>
+          <option value="furniture">Furniture</option>
+          <option value="cosmetics">Cosmetics</option>
+          <option value="foodAndHealth">Food and Health</option>
+        </select>
+        <input type="number" id="priceMin" placeholder="Min Price">
+        <input type="number" id="priceMax" placeholder="Max Price">
+        <select id="sortBy">
+          <option value="priceLow">Price: Low to High</option>
+          <option value="priceHigh">Price: High to Low</option>
+        </select>
+        <button onclick="applyFilters()">Apply Filters</button>
+      </div>
+      <div class="product-grid" id="productsList"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Cart Section -->
+    <!-- <div id="cart" class="section">
+      <h2>Your Cart</h2>
+      <div id="cartList"></div>
+      <div class="cart-summary">
+        <p>Total: $<span id="cartTotal">0</span></p>
+        <button onclick="placeOrder()">Proceed to Checkout</button>
+      </div>
+    </div> -->
+
+    <!-- Update the <div id="cart"> section -->
+<div id="cart" class="section">
+  <h2>Your Cart</h2>
+  <div id="cartList"></div>
+  <div class="cart-summary">
+    <p>Total: $<span id="cartTotal">0</span></p>
+    <button onclick="checkoutCart()">Proceed to Checkout</button>
+  </div>
+</div>
+
+    <!-- Wishlist Section -->
+    <div id="wishlist" class="section">
+      <h2>Your Wishlist</h2>
+      <div id="wishlistList"></div>
+    </div>
+
+    <!-- History Section -->
+    <div id="history" class="section">
+      <h2>Order History</h2>
+      <table id="historyList">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Track</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Order Tracking Modal -->
+    <div id="trackingModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h2>Track Order</h2>
+        <p>Order ID: <span id="trackOrderId"></span></p>
+        <p>Status: <span id="trackStatus"></span></p>
+        <p>Estimated Delivery: <span id="trackDelivery"></span></p>
+        <button onclick="closeModal('trackingModal')">Close</button>
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h2>Payment</h2>
+        <p>Total Amount: $<span id="paymentAmount"></span></p>
+        <select id="paymentMethod">
+          <option value="credit_card">Credit Card</option>
+          <option value="debit_card">Debit Card</option>
+          <option value="paypal">PayPal</option>
+          <option value="cash">Cash (Credit Limit: 1000)</option>
+        </select>
+        <button onclick="processPayment()">Pay Now</button>
+        <button onclick="closeModal('paymentModal')">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Sign In Dialog -->
+ <!-- Sign In Dialog -->
+<div id="signInDialog" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeSignInDialog()">×</span>
+    <h2>Sign In</h2>
+    <p>Are you a new user?</p>
+    <button onclick="showSection('register'); closeSignInDialog();">Yes, Register</button>
+    <button onclick="showSection('login'); closeSignInDialog();">No, Sign In</button>
+  </div>
+</div>
+
+
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About HandTime</h3>
+        <p>HandTime is your one-stop shop for electronics, fashion, furniture, cosmetics, and more.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="#">Facebook</a>
+          <a href="#">Twitter</a>
+          <a href="#">Instagram</a>
+        </div>
+      </div>
+    </div>
+    <p>© 2025 HandTime. All rights reserved.</p>
+  </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

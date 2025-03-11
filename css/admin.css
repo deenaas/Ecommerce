@@ -1,0 +1,260 @@
+/* css/admin.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  header {
+    background-color: #232f3e;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+  }
+  
+  header h1 {
+    margin: 0;
+  }
+  
+  .admin-logout {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .admin-logout a {
+    color: #febd69;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .admin-container {
+    display: flex;
+    min-height: calc(100vh - 120px);
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #131921;
+    color: white;
+    padding-top: 1rem;
+  }
+  
+  .hamburger {
+    display: none;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .sidebar nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar nav ul li {
+    padding: 0.5rem 1rem;
+  }
+  
+  .sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .sidebar nav ul li a:hover {
+    color: #febd69;
+  }
+  
+  .admin-content {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  .section {
+    display: none;
+  }
+  
+  .section.active, .category-section {
+    display: block;
+  }
+  
+  .category-section {
+    display: none;
+  }
+  
+  h2, h3, h4 {
+    color: #232f3e;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    background-color: #febd69;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+  }
+  
+  button:hover {
+    background-color: #e47911;
+  }
+  
+  .message {
+    margin-top: 1rem;
+    color: #e47911;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  table th, table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+  }
+  
+  table th {
+    background-color: #232f3e;
+    color: white;
+  }
+  
+  table td button {
+    background-color: #febd69;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+  }
+  
+  table td button:hover {
+    background-color: #e47911;
+  }
+  
+  .fetched-product {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  .fetched-product h3 {
+    margin-top: 0;
+  }
+  
+  .fetched-product p {
+    margin: 0.25rem 0;
+  }
+  
+  .orders-list, .product-inventory, .search-results, .low-stock-list {
+    margin-top: 1rem;
+  }
+  
+  .orders-list h4, .product-inventory h4, .search-results h4, .low-stock-list h4 {
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+  }
+  
+  .orders-list ul, .product-inventory ul, .search-results ul, .low-stock-list ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .orders-list li, .product-inventory li, .search-results li, .low-stock-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .product-inventory li button, .search-results li button, .low-stock-list li button {
+    margin-left: 0.5rem;
+  }
+  
+  .inventory-controls {
+    margin-bottom: 1rem;
+  }
+  
+  footer {
+    background-color: #232f3e;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .admin-container {
+      flex-direction: column;
+    }
+  
+    .sidebar {
+      width: 100%;
+    }
+  
+    .hamburger {
+      display: block;
+    }
+  
+    .sidebar nav ul {
+      display: none;
+    }
+  
+    .sidebar nav ul.active {
+      display: block;
+    }
+  }
+
+  .analytics-filters {
+    margin-bottom: 2rem;
+  }
+  
+  .analytics-filters .form-group {
+    display: inline-block;
+    margin-right: 1rem;
+  }
+  
+  #summaryMetrics {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+  
+  #summaryMetrics div {
+    margin-bottom: 0.5rem;
+  }
+  
+  #summaryMetrics strong {
+    display: inline-block;
+    width: 200px;
+  }
+  
+  canvas {
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+
+  

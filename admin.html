@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - HandTime</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>Admin Panel - HandTime</h1>
+    <div class="admin-logout">
+      <a onclick="logout()">Logout</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="hamburger" onclick="toggleSidebar()">☰</div>
+      <nav>
+        <ul>
+          <li><a onclick="showCategory('electronics')">Electronics</a></li>
+          <li><a onclick="showCategory('fashion')">Fashion</a></li>
+          <li><a onclick="showCategory('furniture')">Furniture</a></li>
+          <li><a onclick="showCategory('cosmetics')">Cosmetics</a></li>
+          <li><a onclick="showCategory('foodAndHealth')">Food and Health</a></li>
+          <li><a onclick="showCategory('fetchProduct')">Fetch Product</a></li>
+          <li><a onclick="showCategory('deleteProduct')">Delete Product</a></li>
+          <li><a onclick="showCategory('bulkUpload')">Bulk Upload</a></li>
+          <li><a onclick="showCategory('userManagement')">User Management</a></li>
+          <li><a onclick="showCategory('orderManagement')">Order Management</a></li>
+          <li><a onclick="showCategory('productInventory')">Product Inventory</a></li>
+          <li><a onclick="showCategory('productSearch')">Product Search</a></li>
+          <li><a onclick="showCategory('lowStockAlerts')">Low Stock Alerts</a></li>
+          <li><a onclick="showCategory('analytics')">Analytics</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+      <!-- Admin Login Section -->
+      <div id="loginSection" class="section active">
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label for="adminEmail">Admin Email</label>
+            <input type="email" id="adminEmail" value="sdeenaa16@gmail.com" placeholder="Admin Email" required>
+          </div>
+          <div class="form-group">
+            <label for="adminPassword">Password</label>
+            <input type="password" id="adminPassword" value="Deenaa@123" placeholder="Password" required>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+        <div id="loginMessage" class="message"></div>
+      </div>
+
+      <!-- Admin Panel Section -->
+      <div id="adminPanel" class="section">
+        <!-- Electronics Section -->
+        <div id="electronics" class="category-section">
+          <h2>Add/Update Electronics</h2>
+          <form id="electronicsForm">
+            <div class="form-group">
+              <label for="electronicsProductId">Product ID (e.g., E001)</label>
+              <input type="text" id="electronicsProductId" placeholder="Product ID (e.g., E001)" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsName">Product Name</label>
+              <input type="text" id="electronicsName" placeholder="Product Name" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsDescription">Description</label>
+              <input type="text" id="electronicsDescription" placeholder="Description" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsBrand">Brand</label>
+              <input type="text" id="electronicsBrand" placeholder="Brand" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsImageFile">Upload Image (optional)</label>
+              <input type="file" id="electronicsImageFile" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="electronicsImageURLs">Image URLs (comma-separated, optional if file uploaded)</label>
+              <input type="text" id="electronicsImageURLs" placeholder="Image URLs (comma-separated)">
+            </div>
+            <div class="form-group">
+              <label for="electronicsDisplay">Display</label>
+              <input type="text" id="electronicsDisplay" placeholder="Display">
+            </div>
+            <div class="form-group">
+              <label for="electronicsProcessor">Processor</label>
+              <input type="text" id="electronicsProcessor" placeholder="Processor">
+            </div>
+            <div class="form-group">
+              <label for="electronicsBattery">Battery</label>
+              <input type="text" id="electronicsBattery" placeholder="Battery">
+            </div>
+            <div class="form-group">
+              <label for="electronicsPrice">Price</label>
+              <input type="number" id="electronicsPrice" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsAvailability">Availability</label>
+              <input type="number" id="electronicsAvailability" placeholder="Availability" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsStock">Stock</label>
+              <input type="number" id="electronicsStock" placeholder="Stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsCreditReward">Credit Reward</label>
+              <input type="number" id="electronicsCreditReward" placeholder="Credit Reward" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="electronicsIsActive">Is Active</label>
+              <select id="electronicsIsActive" required>
+                <option value="true">Active</option>
+                <option value="false">Not Active</option>
+              </select>
+            </div>
+            <button type="submit">Add/Update Product</button>
+            <button type="button" onclick="document.getElementById('electronicsForm').reset()">Clear Form</button>
+          </form>
+          <div id="electronicsMessage" class="message"></div>
+        </div>
+
+        <!-- Fashion Section -->
+        <div id="fashion" class="category-section">
+          <h2>Add/Update Fashion</h2>
+          <form id="fashionForm">
+            <div class="form-group">
+              <label for="fashionProductId">Product ID (e.g., F001)</label>
+              <input type="text" id="fashionProductId" placeholder="Product ID (e.g., F001)" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionName">Product Name</label>
+              <input type="text" id="fashionName" placeholder="Product Name" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionDescription">Description</label>
+              <input type="text" id="fashionDescription" placeholder="Description" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionBrand">Brand</label>
+              <input type="text" id="fashionBrand" placeholder="Brand" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionImageFile">Upload Image (optional)</label>
+              <input type="file" id="fashionImageFile" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="fashionImageURLs">Image URLs (comma-separated, optional if file uploaded)</label>
+              <input type="text" id="fashionImageURLs" placeholder="Image URLs (comma-separated)">
+            </div>
+            <div class="form-group">
+              <label for="fashionSize">Size (e.g., S, M, L)</label>
+              <input type="text" id="fashionSize" placeholder="Size (e.g., S, M, L)">
+            </div>
+            <div class="form-group">
+              <label for="fashionColor">Color</label>
+              <input type="text" id="fashionColor" placeholder="Color">
+            </div>
+            <div class="form-group">
+              <label for="fashionMaterial">Material</label>
+              <input type="text" id="fashionMaterial" placeholder="Material">
+            </div>
+            <div class="form-group">
+              <label for="fashionPrice">Price</label>
+              <input type="number" id="fashionPrice" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionDiscountPrice">Discount Price</label>
+              <input type="number" id="fashionDiscountPrice" placeholder="Discount Price">
+            </div>
+            <div class="form-group">
+              <label for="fashionWarehouseId">Warehouse ID</label>
+              <input type="text" id="fashionWarehouseId" placeholder="Warehouse ID" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionStock">Stock</label>
+              <input type="number" id="fashionStock" placeholder="Stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionCreditReward">Credit Reward</label>
+              <input type="number" id="fashionCreditReward" placeholder="Credit Reward" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionSoldBy">Sold By</label>
+              <input type="text" id="fashionSoldBy" placeholder="Sold By" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionAvailability">Availability</label>
+              <input type="number" id="fashionAvailability" placeholder="Availability" required>
+            </div>
+            <div class="form-group">
+              <label for="fashionIsActive">Is Active</label>
+              <select id="fashionIsActive" required>
+                <option value="true">Active</option>
+                <option value="false">Not Active</option>
+              </select>
+            </div>
+            <button type="submit">Add/Update Product</button>
+            <button type="button" onclick="document.getElementById('fashionForm').reset()">Clear Form</button>
+          </form>
+          <div id="fashionMessage" class="message"></div>
+        </div>
+
+        <!-- Furniture Section -->
+        <div id="furniture" class="category-section">
+          <h2>Add/Update Furniture</h2>
+          <form id="furnitureForm">
+            <div class="form-group">
+              <label for="furnitureProductId">Product ID (e.g., FU001)</label>
+              <input type="text" id="furnitureProductId" placeholder="Product ID (e.g., FU001)" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureName">Product Name</label>
+              <input type="text" id="furnitureName" placeholder="Product Name" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureDescription">Description</label>
+              <input type="text" id="furnitureDescription" placeholder="Description" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureBrand">Brand</label>
+              <input type="text" id="furnitureBrand" placeholder="Brand" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureImageFile">Upload Image (optional)</label>
+              <input type="file" id="furnitureImageFile" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="furnitureImageURLs">Image URLs (comma-separated, optional if file uploaded)</label>
+              <input type="text" id="furnitureImageURLs" placeholder="Image URLs (comma-separated)">
+            </div>
+            <div class="form-group">
+              <label for="furnitureDimensions">Dimensions (e.g., 20x30x40)</label>
+              <input type="text" id="furnitureDimensions" placeholder="Dimensions (e.g., 20x30x40)">
+            </div>
+            <div class="form-group">
+              <label for="furnitureMaterial">Material</label>
+              <input type="text" id="furnitureMaterial" placeholder="Material">
+            </div>
+            <div class="form-group">
+              <label for="furnitureWeight">Weight (kg)</label>
+              <input type="number" id="furnitureWeight" placeholder="Weight (kg)">
+            </div>
+            <div class="form-group">
+              <label for="furniturePrice">Price</label>
+              <input type="number" id="furniturePrice" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureDiscountPrice">Discount Price</label>
+              <input type="number" id="furnitureDiscountPrice" placeholder="Discount Price">
+            </div>
+            <div class="form-group">
+              <label for="furnitureWarehouseId">Warehouse ID</label>
+              <input type="text" id="furnitureWarehouseId" placeholder="Warehouse ID" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureStock">Stock</label>
+              <input type="number" id="furnitureStock" placeholder="Stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureCreditReward">Credit Reward</label>
+              <input type="number" id="furnitureCreditReward" placeholder="Credit Reward" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureSoldBy">Sold By</label>
+              <input type="text" id="furnitureSoldBy" placeholder="Sold By" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureAvailability">Availability</label>
+              <input type="number" id="furnitureAvailability" placeholder="Availability" required>
+            </div>
+            <div class="form-group">
+              <label for="furnitureIsActive">Is Active</label>
+              <select id="furnitureIsActive" required>
+                <option value="true">Active</option>
+                <option value="false">Not Active</option>
+              </select>
+            </div>
+            <button type="submit">Add/Update Product</button>
+            <button type="button" onclick="document.getElementById('furnitureForm').reset()">Clear Form</button>
+          </form>
+          <div id="furnitureMessage" class="message"></div>
+        </div>
+
+        <!-- Cosmetics Section -->
+        <div id="cosmetics" class="category-section">
+          <h2>Add/Update Cosmetics</h2>
+          <form id="cosmeticsForm">
+            <div class="form-group">
+              <label for="cosmeticsProductId">Product ID (e.g., C001)</label>
+              <input type="text" id="cosmeticsProductId" placeholder="Product ID (e.g., C001)" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsName">Product Name</label>
+              <input type="text" id="cosmeticsName" placeholder="Product Name" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsDescription">Description</label>
+              <input type="text" id="cosmeticsDescription" placeholder="Description" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsBrand">Brand</label>
+              <input type="text" id="cosmeticsBrand" placeholder="Brand" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsImageFile">Upload Image (optional)</label>
+              <input type="file" id="cosmeticsImageFile" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsImageURLs">Image URLs (comma-separated, optional if file uploaded)</label>
+              <input type="text" id="cosmeticsImageURLs" placeholder="Image URLs (comma-separated)">
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsType">Type (e.g., Lipstick, Cream)</label>
+              <input type="text" id="cosmeticsType" placeholder="Type (e.g., Lipstick, Cream)">
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsIngredients">Ingredients (comma-separated)</label>
+              <input type="text" id="cosmeticsIngredients" placeholder="Ingredients (comma-separated)">
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsExpirationDate">Expiration Date</label>
+              <input type="date" id="cosmeticsExpirationDate" placeholder="Expiration Date">
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsPrice">Price</label>
+              <input type="number" id="cosmeticsPrice" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsDiscountPrice">Discount Price</label>
+              <input type="number" id="cosmeticsDiscountPrice" placeholder="Discount Price">
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsWarehouseId">Warehouse ID</label>
+              <input type="text" id="cosmeticsWarehouseId" placeholder="Warehouse ID" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsStock">Stock</label>
+              <input type="number" id="cosmeticsStock" placeholder="Stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsCreditReward">Credit Reward</label>
+              <input type="number" id="cosmeticsCreditReward" placeholder="Credit Reward" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsSoldBy">Sold By</label>
+              <input type="text" id="cosmeticsSoldBy" placeholder="Sold By" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsAvailability">Availability</label>
+              <input type="number" id="cosmeticsAvailability" placeholder="Availability" required>
+            </div>
+            <div class="form-group">
+              <label for="cosmeticsIsActive">Is Active</label>
+              <select id="cosmeticsIsActive" required>
+                <option value="true">Active</option>
+                <option value="false">Not Active</option>
+              </select>
+            </div>
+            <button type="submit">Add/Update Product</button>
+            <button type="button" onclick="document.getElementById('cosmeticsForm').reset()">Clear Form</button>
+          </form>
+          <div id="cosmeticsMessage" class="message"></div>
+        </div>
+
+        <!-- Food and Health Section -->
+        <div id="foodAndHealth" class="category-section">
+          <h2>Add/Update Food and Health</h2>
+          <form id="foodAndHealthForm">
+            <div class="form-group">
+              <label for="foodAndHealthProductId">Product ID (e.g., FH001)</label>
+              <input type="text" id="foodAndHealthProductId" placeholder="Product ID (e.g., FH001)" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthName">Product Name</label>
+              <input type="text" id="foodAndHealthName" placeholder="Product Name" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthDescription">Description</label>
+              <input type="text" id="foodAndHealthDescription" placeholder="Description" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthBrand">Brand</label>
+              <input type="text" id="foodAndHealthBrand" placeholder="Brand" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthImageFile">Upload Image (optional)</label>
+              <input type="file" id="foodAndHealthImageFile" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthImageURLs">Image URLs (comma-separated, optional if file uploaded)</label>
+              <input type="text" id="foodAndHealthImageURLs" placeholder="Image URLs (comma-separated)">
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthType">Type (e.g., Supplement, Snack)</label>
+              <input type="text" id="foodAndHealthType" placeholder="Type (e.g., Supplement, Snack)">
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthNutritionalInfo">Nutritional Info</label>
+              <input type="text" id="foodAndHealthNutritionalInfo" placeholder="Nutritional Info">
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthShelfLife">Shelf Life (e.g., 12 months)</label>
+              <input type="text" id="foodAndHealthShelfLife" placeholder="Shelf Life (e.g., 12 months)">
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthPrice">Price</label>
+              <input type="number" id="foodAndHealthPrice" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthDiscountPrice">Discount Price</label>
+              <input type="number" id="foodAndHealthDiscountPrice" placeholder="Discount Price">
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthWarehouseId">Warehouse ID</label>
+              <input type="text" id="foodAndHealthWarehouseId" placeholder="Warehouse ID" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthStock">Stock</label>
+              <input type="number" id="foodAndHealthStock" placeholder="Stock" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthCreditReward">Credit Reward</label>
+              <input type="number" id="foodAndHealthCreditReward" placeholder="Credit Reward" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthSoldBy">Sold By</label>
+              <input type="text" id="foodAndHealthSoldBy" placeholder="Sold By" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthAvailability">Availability</label>
+              <input type="number" id="foodAndHealthAvailability" placeholder="Availability" required>
+            </div>
+            <div class="form-group">
+              <label for="foodAndHealthIsActive">Is Active</label>
+              <select id="foodAndHealthIsActive" required>
+                <option value="true">Active</option>
+                <option value="false">Not Active</option>
+              </select>
+            </div>
+            <button type="submit">Add/Update Product</button>
+            <button type="button" onclick="document.getElementById('foodAndHealthForm').reset()">Clear Form</button>
+          </form>
+          <div id="foodAndHealthMessage" class="message"></div>
+        </div>
+
+        <!-- Fetch Product for Update -->
+        <div id="fetchProduct" class="category-section">
+          <h2>Fetch Product for Update</h2>
+          <form id="fetchProductForm">
+            <div class="form-group">
+              <label for="fetchProductId">Product ID (e.g., E001)</label>
+              <input type="text" id="fetchProductId" placeholder="Product ID" required>
+            </div>
+            <button type="submit">Fetch Product</button>
+          </form>
+          <div id="fetchProductMessage" class="message"></div>
+          <div id="fetchedProductDetails" class="fetched-product"></div>
+        </div>
+
+        <!-- Delete Product -->
+        <div id="deleteProduct" class="category-section">
+          <h2>Delete Product</h2>
+          <form id="deleteProductForm">
+            <div class="form-group">
+              <label for="deleteProductId">Product ID (e.g., E001)</label>
+              <input type="text" id="deleteProductId" placeholder="Product ID" required>
+            </div>
+            <button type="submit">Delete Product</button>
+          </form>
+          <div id="deleteProductMessage" class="message"></div>
+        </div>
+
+        <!-- Bulk Upload -->
+        <div id="bulkUpload" class="category-section">
+          <h2>Bulk Upload Products</h2>
+          <form id="bulkUploadForm">
+            <div class="form-group">
+              <label for="bulkUploadFile">Upload CSV File</label>
+              <input type="file" id="bulkUploadFile" accept=".csv" required>
+            </div>
+            <button type="submit">Upload CSV</button>
+          </form>
+          <div id="bulkUploadMessage" class="message"></div>
+        </div>
+
+        <!-- User Management -->
+        <div id="userManagement" class="category-section">
+          <h2>User Management</h2>
+          <table id="userList">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Credit Limit</th>
+                <th>Orders</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <!-- Order Management -->
+        <div id="orderManagement" class="category-section">
+          <h2>Order Management</h2>
+          <h3>Orders by Category</h3>
+          <div id="ordersList" class="orders-list"></div>
+        </div>
+
+        <!-- Product Inventory -->
+        <div id="productInventory" class="category-section">
+          <h2>Product Inventory</h2>
+          <div class="inventory-controls">
+            <label><input type="checkbox" id="showInactiveProducts" onchange="loadProductInventory()"> Show Inactive Products</label>
+          </div>
+          <div id="productInventoryList" class="product-inventory"></div>
+        </div>
+
+        <!-- Product Search -->
+        <div id="productSearch" class="category-section">
+          <h2>Search Products</h2>
+          <form id="productSearchForm">
+            <div class="form-group">
+              <label for="searchQuery">Search by ID or Name</label>
+              <input type="text" id="searchQuery" placeholder="Enter Product ID or Name" required>
+            </div>
+            <button type="submit">Search</button>
+          </form>
+          <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <!-- Low Stock Alerts -->
+        <div id="lowStockAlerts" class="category-section">
+          <h2>Low Stock Alerts</h2>
+          <div id="lowStockList" class="low-stock-list"></div>
+        </div>
+
+        <!-- Analytics -->
+              <!-- Analytics -->
+      <div id="analytics" class="category-section">
+        <h2>Analytics</h2>
+        <!-- Date Filter Form -->
+        <div class="analytics-filters">
+          <h3>Filter by Date Range</h3>
+          <form id="analyticsFilterForm">
+            <div class="form-group">
+              <label for="analyticsFromDate">From Date</label>
+              <input type="date" id="analyticsFromDate">
+            </div>
+            <div class="form-group">
+              <label for="analyticsToDate">To Date</label>
+              <input type="date" id="analyticsToDate">
+            </div>
+            <button type="submit">Apply Filters</button>
+            <button type="button" onclick="clearAnalyticsFilters()">Clear Filters</button>
+          </form>
+        </div>
+
+        <!-- Summary Metrics -->
+        <h3>Summary Metrics</h3>
+        <div id="summaryMetrics">
+          <div><strong>Total Revenue:</strong> <span id="totalRevenue">$0</span></div>
+          <div><strong>Average Order Value:</strong> <span id="averageOrderValue">$0</span></div>
+          <div><strong>Total Orders:</strong> <span id="totalOrders">0</span></div>
+          <div><strong>Out-of-Stock Lost Revenue:</strong> <span id="outOfStockLostRevenue">$0</span></div>
+          <div><strong>Credit Rewards Used:</strong> <span id="creditRewardsUsed">0 credits</span></div>
+        </div>
+
+        <!-- Cash Reports -->
+        <h3>Cash Reports</h3>
+        <div id="cashReports"></div>
+
+        <!-- Customer Purchases -->
+        <h3>Customer Purchases</h3>
+        <div id="customerPurchases"></div>
+
+        <!-- User Activity -->
+        <h3>User Activity</h3>
+        <div id="userActivity"></div>
+
+        <!-- Payment Reports -->
+        <h3>Payment Reports</h3>
+        <div id="paymentReports"></div>
+
+        <!-- Top Products by Stock -->
+        <h3>Top Products by Stock</h3>
+        <div id="topProducts"></div>
+        <canvas id="topProductsChart"></canvas>
+
+        <!-- Bottom Products by Stock -->
+        <h3>Bottom Products by Stock</h3>
+        <div id="bottomProducts"></div>
+        <canvas id="bottomProductsChart"></canvas>
+
+        <!-- Out-of-Stock Products -->
+        <h3>Out-of-Stock Products</h3>
+        <div id="outOfStockProducts"></div>
+
+        <!-- Top Products by Credit Reward -->
+        <h3>Top Products by Credit Reward</h3>
+        <div id="topCreditProducts"></div>
+
+        <!-- Top Categories by Sales -->
+        <h3>Top Categories by Sales</h3>
+        <div id="topCategoriesBySales"></div>
+        <canvas id="topCategoriesChart"></canvas>
+
+        <!-- Revenue Over Time -->
+        <h3>Revenue Over Time</h3>
+        <canvas id="revenueOverTimeChart"></canvas>
+
+        <!-- Inventory by Category -->
+        <h3>Inventory by Category</h3>
+        <div id="inventoryReports"></div>
+        <canvas id="inventoryChart"></canvas>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 HandTime Admin. Last updated: <span id="lastUpdated">March 10, 2025</span></p>
+  </footer>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
